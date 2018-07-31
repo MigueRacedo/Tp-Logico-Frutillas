@@ -73,19 +73,32 @@ leSpoileo(Persona, OtraPersona, Serie):-
 %televidenteResponsable/1:
 televidenteResponsable(Persona):-
         mira(Persona,_),
-        not(leSpoileo(Persona,_,_)). %Hay que hacerlo inversible.
+        not(leSpoileo(Persona,_,_)). 
 
 televidenteResponsable(Persona):-
         quiereVer(Persona,_),
         not(leSpoileo(Persona,_,_)).
 
+
 %vieneZafando/2:
 vieneZafando(Persona,Serie):-
         mira(Persona,Serie),
+        popular(Serie),
         not(leSpoileo(_,Persona,Serie)). %Hay que incorporar el tema de si es popular y esFuerte.
 
 vieneZafando(Persona,Serie):-
         quiereVer(Persona,Serie),
+        popular(Serie),
+        not(leSpoileo(_,Persona,Serie)).
+
+vieneZafando(Persona,Serie):-
+        mira(Persona,Serie),
+        forall(paso(Serie,_,_,LoQuePaso),esFuerte(LoQuePaso)),
+        not(leSpoileo(_,Persona,Serie)). %Hay que incorporar el tema de si es popular y esFuerte.
+
+vieneZafando(Persona,Serie):-
+        quiereVer(Persona,Serie),
+        forall(paso(Serie,Temporadas,_,LoQuePaso),esFuerte(LoQuePaso)),
         not(leSpoileo(_,Persona,Serie)).
 
 %esFuerte/1:
