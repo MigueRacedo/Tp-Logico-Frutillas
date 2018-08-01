@@ -82,24 +82,23 @@ televidenteResponsable(Persona):-
 
 %vieneZafando/2:
 vieneZafando(Persona,Serie):-
-        mira(Persona,Serie),
-        popular(Serie),
+        estaEnSusPlanes(Persona,Serie),
+        esPopularOFuerte(Serie),
         not(leSpoileo(_,Persona,Serie)). %Hay que incorporar el tema de si es popular y esFuerte.
 
-vieneZafando(Persona,Serie):-
-        quiereVer(Persona,Serie),
-        popular(Serie),
-        not(leSpoileo(_,Persona,Serie)).
+%estaEnSusPlanes/2:
+estaEnSusPlanes(Persona,Serie):-
+        mira(Persona,Serie).
 
-vieneZafando(Persona,Serie):-
-        mira(Persona,Serie),
-        forall(paso(Serie,_,_,LoQuePaso),esFuerte(LoQuePaso)),
-        not(leSpoileo(_,Persona,Serie)). %Hay que incorporar el tema de si es popular y esFuerte.
+estaEnSusPlanes(Persona,Serie):-
+        quiereVer(Persona,Serie).
 
-vieneZafando(Persona,Serie):-
-        quiereVer(Persona,Serie),
-        forall(paso(Serie,Temporadas,_,LoQuePaso),esFuerte(LoQuePaso)),
-        not(leSpoileo(_,Persona,Serie)).
+%esPopularOFuerte/1:
+esPopularOFuerte(Serie):-
+        popular(Serie).
+
+esPopularOFuerte(Serie):-
+        forall(paso(Serie,_,_,LoQuePaso),esFuerte(LoQuePaso)).
 
 %esFuerte/1:
 esFuerte(Hecho):-
