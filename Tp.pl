@@ -84,7 +84,7 @@ televidenteResponsable(Persona):-
 vieneZafando(Persona,Serie):-
         estaEnSusPlanes(Persona,Serie),
         esPopularOFuerte(Serie),
-        not(leSpoileo(_,Persona,Serie)). %Hay que incorporar el tema de si es popular y esFuerte.
+        not(leSpoileo(_,Persona,Serie)).
 
 %estaEnSusPlanes/2:
 estaEnSusPlanes(Persona,Serie):-
@@ -98,20 +98,11 @@ esPopularOFuerte(Serie):-
         popular(Serie).
 
 esPopularOFuerte(Serie):-
-        forall(paso(Serie,_,_,LoQuePaso),esFuerte(LoQuePaso)).
+        forall(paso(Serie,))
 
-%esFuerte/1:
-esFuerte(Hecho):-
-        paso(_,_,_,Hecho),
-        Hecho = muerte(_).
-
-esFuerte(Hecho):-
-        paso(_,_,_,Hecho),
-        Hecho = relacion(amorosa,_,_).
-
-esFuerte(Hecho):-
-        paso(_,_,_,Hecho),
-        Hecho = relacion(parentesco,_,_).
+esFuerte(muerte(_)).
+esFuerte(relacion(amorosa,_,_)).
+esFuerte(relacion(parentesco,_,_)).
 
 
 :- begin_tests(esSpoiler).
