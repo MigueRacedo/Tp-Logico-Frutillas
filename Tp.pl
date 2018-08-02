@@ -98,11 +98,17 @@ esPopularOFuerte(Serie):-
         popular(Serie).
 
 esPopularOFuerte(Serie):-
-        forall(paso(Serie,))
+        serie(Serie,_),
+        forall(paso(Serie,Temporada,_,_),esFuerte(Serie,Temporada)).
 
-esFuerte(muerte(_)).
-esFuerte(relacion(amorosa,_,_)).
-esFuerte(relacion(parentesco,_,_)).
+%esFuerte/2:
+esFuerte(Serie,Temporada):-
+        paso(Serie,Temporada,_,LoQuePaso), 
+        esHeavy(LoQuePaso).
+
+esHeavy(muerte(_)).
+esHeavy(relacion(amorosa,_,_)).
+esHeavy(relacion(parentesco,_,_)).
 
 
 :- begin_tests(esSpoiler).
