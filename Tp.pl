@@ -107,15 +107,6 @@ esPopularOFuerte(Serie):-
         serie(Serie,_),
         forall(paso(Serie,Temporada,_,_),esFuerte(Serie,Temporada)).
 
-%esFuerte/2:
-esFuerte(Serie,Temporada):-
-        paso(Serie,Temporada,_,LoQuePaso), 
-        esHeavy(LoQuePaso).
-
-esHeavy(muerte(_)).
-esHeavy(relacion(amorosa,_,_)).
-esHeavy(relacion(parentesco,_,_)).
-
 
 :- begin_tests(esSpoiler).
 
@@ -134,13 +125,53 @@ test(relacion_de_parentesco_de_anakin_y_lavezzi_no_es_spoiler_en_starWars, fail)
 
 % Parte 2 tp:
 
+%PlotTwist(Serie,Temporada,Capitulo,PlotTwist):
+plotTwist(got,3,2,["suenio","sinPiernas"]).
+plotTwist(got,3,12,["fuego","boda"]).
+plotTwist(superCampeones,9,9,["suenio","coma","sinPiernas"]).
+plotTwist(drHouse,8,7,["coma","pastillas"]).
+
+
 %malaGente/1:
 malaGente(Persona):-
         estaEnSusPlanes(Persona,_),
         forall(leDijo(Persona,OtraPersona,Serie,_),leSpoileo(Persona,OtraPersona,Serie)).
 
 malaGente(Persona):-
-        not(estaEnSusPlanes(Persona,_)),
-        forall(not(mira(Persona,Serie)),leSpoileo(Persona,_,Serie)).
+        not(estaEnSusPlanes(Persona,Serie)),
+        leSpoileo(Persona,_,Serie).
+
+%esFuerte/2:
+esFuerte(Serie,LoQuePaso):-
+        paso(Serie,_,_,LoQuePaso), 
+        esHeavy(LoQuePaso).
+
+esFuerte(Serie,LoQuePaso):-
+        plotTwist(Serie,_,_,Plot),
+        esBuenPlotTwist(Plot,Serie).
+
+%esBuenPlotTwist/2:
+
+esBuenPlotTwist(Plot,Serie):-
+        not(esCliche(Plot,Serie)),
+        pasoEnFinalDeSeason(Plot,Serie).
+
+%EsCliche/2:
+esCliche(Plot,Serie):-
+        plotTwist(Serie,_,_,Plot),
+        forall(member())
+
+
+esFuerte(futurama,muerte(seymourDiera)).
+esFuerte(starWars,muerte(emperor)).
+esFuerte(starWars,relacion(parentesco,anakin,rey)).
+esFuerte(starWars,relacion(parentesco,darthVader,luke)).
+esFuerte(himym,relacion(amorosa,ted,robin)).
+esFuerte(himym,relacion(amorosa,swarley,robin)).
+
+
+esHeavy(muerte(_)).
+esHeavy(relacion(amorosa,_,_)).
+esHeavy(relacion(parentesco,_,_)).
 
 
