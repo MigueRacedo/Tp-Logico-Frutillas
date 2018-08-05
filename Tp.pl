@@ -8,11 +8,13 @@ mira(maiu, starWars).
 mira(maiu, got).
 mira(maiu, onePiece).
 mira(gaston, hoc).
+mira(pedro,got).
 
 %quiereVer(Persona, Serie).
 quiereVer(juan, hoc).
 quiereVer(aye, got).
 quiereVer(gaston, himym).
+quiereVer(aye,got).
 
 %popular(Serie).
 popular(got).
@@ -37,6 +39,7 @@ paso(starWars, 3, 2, relacion(parentesco, vader, luke)).
 paso(himym, 1, 1, relacion(amorosa, ted, robin)).
 paso(himym, 4, 3, relacion(amorosa, swarley, robin)).
 paso(got, 4, 5, relacion(amistad, tyrion, dragon)).
+paso(got,2,5,relacion(amistad,tyrion,dragon)).
 
 %leDijo(Persona, OtraPersona, Serie, Lo que paso).
 leDijo(gaston, maiu, got, relacion(amistad, tyrion, dragon)).
@@ -45,6 +48,9 @@ leDijo(nico, juan, got, muerte(tyrion)).
 leDijo(aye, juan, got, relacion(amistad, tyrion, john)).
 leDijo(aye, maiu, got, relacion(amistad, tyrion, john)).
 leDijo(aye, gaston, got, relacion(amistad, tyrion, dragon)).
+leDijo(nico,juan,futurama,muerte(seymourDiera)).
+leDijo(pedro,aye,got,relacion(amistad,tyrion,dragon)).
+leDijo(pedro,nico,got,relacion(parentesco,tyrion,dragon)).
 
 %esSpoiler/2:
 esSpoiler(Serie, Spoiler):-
@@ -123,3 +129,20 @@ test(relacion_de_parentesco_de_anakin_y_lavezzi_no_es_spoiler_en_starWars, fail)
         esSpoiler(starWars,relacion(parentesco,anakin,lavezzi)).
 
 :-end_tests(esSpoiler).
+
+% ---------------------------------------------------------------------------------------------------------- Fin Parte 1:}
+
+% Parte 2 tp:
+
+
+
+
+
+
+
+
+%malaGente/1:
+malaGente(Persona):-
+        estaEnSusPlanes(Persona,_),
+        forall(leDijo(Persona,OtraPersona,Serie,_),leSpoileo(Persona,OtraPersona,Serie)).
+
