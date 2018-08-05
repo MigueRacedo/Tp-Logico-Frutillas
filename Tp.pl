@@ -134,15 +134,13 @@ test(relacion_de_parentesco_de_anakin_y_lavezzi_no_es_spoiler_en_starWars, fail)
 
 % Parte 2 tp:
 
-
-
-
-
-
-
-
 %malaGente/1:
 malaGente(Persona):-
         estaEnSusPlanes(Persona,_),
         forall(leDijo(Persona,OtraPersona,Serie,_),leSpoileo(Persona,OtraPersona,Serie)).
+
+malaGente(Persona):-
+        not(estaEnSusPlanes(Persona,_)),
+        forall(not(mira(Persona,Serie)),leSpoileo(Persona,_,Serie)).
+
 
