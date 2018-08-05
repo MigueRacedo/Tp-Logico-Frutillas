@@ -22,7 +22,7 @@ popular(starWars).
 %serie(Nombre, Temporadas).
 serie(got, temporada(3,12)).
 serie(got, temporada(2,10)).
-serie(hymym, temporada(1,23)).
+serie(himym, temporada(1,23)).
 serie(drHouse ,temporada(8,16)).
 
 %temporada(Numero, CantDeCaps).
