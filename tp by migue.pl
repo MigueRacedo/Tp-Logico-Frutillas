@@ -104,9 +104,15 @@ esPopularOFuerte(Serie):-
         popular(Serie).
 
 esPopularOFuerte(Serie):-
-        serie(Serie,_),
-        forall(paso(Serie,Temporada,_,_),esFuerte(Serie,Temporada)).
+        esFuerte(Serie).
 
+esFuerte(Serie):-
+        serie(Serie,_),
+        forall(paso(Serie,_,_,LoQuePaso),hechoFuerte(LoQuePaso)).
+
+hechoFuerte(muerte(_)).
+hechoFuerte(relacion(amorosa,_,_)).
+hechoFuerte(relacion(parentesco,_,_)).
 
 :- begin_tests(esSpoiler).
 
@@ -147,7 +153,7 @@ test(nico_no_es_televidenteResponsable, fail):-
 
 :- begin_tests(vieneZafando).
 
-test(maiu_no_vieneZafando_con_ninguna, nondet):-
+test(maiu_no_vieneZafando_con_ninguna, fail):-
         vieneZafando(maiu,_).
 test(juanVieneZafando, set(Serie == [himym, got, hoc])):-
         vieneZafando(juan, Serie).
