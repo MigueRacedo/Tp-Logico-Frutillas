@@ -8,11 +8,13 @@ mira(maiu, starWars).
 mira(maiu, got).
 mira(maiu, onePiece).
 mira(gaston, hoc).
+mira(pedro,got).
 
 %quiereVer(Persona, Serie).
 quiereVer(juan, hoc).
 quiereVer(aye, got).
 quiereVer(gaston, himym).
+quiereVer(aye,got).
 
 %popular(Serie).
 popular(got).
@@ -22,7 +24,7 @@ popular(starWars).
 %serie(Nombre, Temporadas).
 serie(got, temporada(3,12)).
 serie(got, temporada(2,10)).
-serie(hymym, temporada(1,23)).
+serie(himym, temporada(1,23)).
 serie(drHouse ,temporada(8,16)).
 
 %temporada(Numero, CantDeCaps).
@@ -37,6 +39,7 @@ paso(starWars, 3, 2, relacion(parentesco, vader, luke)).
 paso(himym, 1, 1, relacion(amorosa, ted, robin)).
 paso(himym, 4, 3, relacion(amorosa, swarley, robin)).
 paso(got, 4, 5, relacion(amistad, tyrion, dragon)).
+paso(got,2,5,relacion(amistad,tyrion,dragon)).
 
 %leDijo(Persona, OtraPersona, Serie, Lo que paso).
 leDijo(gaston, maiu, got, relacion(amistad, tyrion, dragon)).
@@ -45,6 +48,9 @@ leDijo(nico, juan, got, muerte(tyrion)).
 leDijo(aye, juan, got, relacion(amistad, tyrion, john)).
 leDijo(aye, maiu, got, relacion(amistad, tyrion, john)).
 leDijo(aye, gaston, got, relacion(amistad, tyrion, dragon)).
+leDijo(nico,juan,futurama,muerte(seymourDiera)).
+leDijo(pedro,aye,got,relacion(amistad,tyrion,dragon)).
+leDijo(pedro,nico,got,relacion(parentesco,tyrion,dragon)).
 
 %esSpoiler/2:
 esSpoiler(Serie, Spoiler):-
@@ -68,33 +74,38 @@ leSpoileo(Persona, OtraPersona, Serie):-
         esSpoiler(Serie, Spoiler),
         quiereVer(OtraPersona, Serie).
 
-%Faltan consultas de lesSpoleo.
+%Faltan consultas de lesSpoileo.
 
 %televidenteResponsable/1:
 televidenteResponsable(Persona):-
-        not(leSpoileo(Persona,_,_)). %Hay que hacerlo inversible.
+        mira(Persona,_),
+        not(leSpoileo(Persona,_,_)). 
+
+televidenteResponsable(Persona):-
+        quiereVer(Persona,_),
+        not(leSpoileo(Persona,_,_)).
+
 
 %vieneZafando/2:
 vieneZafando(Persona,Serie):-
-        mira(Persona,Serie),
-        not(leSpoileo(_,Persona,Serie)). %Hay que incorporar el tema de si es popular y esFuerte.
-
-vieneZafando(Persona,Serie):-
-        quiereVer(Persona,Serie),
+        estaEnSusPlanes(Persona,Serie),
+        esPopularOFuerte(Serie),
         not(leSpoileo(_,Persona,Serie)).
 
-%esFuerte/1:
-esFuerte(Hecho):-
-        paso(_,_,_,Hecho),
-        Hecho = muerte(_).
+%estaEnSusPlanes/2:
+estaEnSusPlanes(Persona,Serie):-
+        mira(Persona,Serie).
 
-esFuerte(Hecho):-
-        paso(_,_,_,Hecho),
-        Hecho = relacion(amorosa,_,_).
+estaEnSusPlanes(Persona,Serie):-
+        quiereVer(Persona,Serie).
 
-esFuerte(Hecho):-
-        paso(_,_,_,Hecho),
-        Hecho = relacion(parentesco,_,_).
+%esPopularOFuerte/1:
+esPopularOFuerte(Serie):-
+        popular(Serie).
+
+esPopularOFuerte(Serie):-
+        serie(Serie,_),
+        forall(paso(Serie,Temporada,_,_),esFuerte(Serie,Temporada)).
 
 
 :- begin_tests(esSpoiler).
@@ -109,3 +120,90 @@ test(relacion_de_parentesco_de_anakin_y_lavezzi_no_es_spoiler_en_starWars, fail)
         esSpoiler(starWars,relacion(parentesco,anakin,lavezzi)).
 
 :-end_tests(esSpoiler).
+
+:- begin_tests(leSpoileo).
+
+test(gaston_le_spoileo_gameOfThrones_a_maiu, nondet):-
+        leSpoileo(gaston,maiu,got).
+test(nico_le_spoileo_starWars_a_maiu, nondet):-
+        leSpoileo(nico,maiu,starWars).
+
+:-end_tests(leSpoileo).
+
+:- begin_tests(televidenteResponsable).
+
+test(juan_es_televidenteResponsable, nondet):-
+        televidenteResponsable(juan).
+test(aye_es_televidenteResponsable, nondet):-
+        televidenteResponsable(aye).
+test(maiu_es_televidenteResponsable, nondet):-
+        televidenteResponsable(maiu).
+test(gaston_no_es_televidenteResponsable, fail):-
+        televidenteResponsable(gaston).
+test(nico_no_es_televidenteResponsable, fail):-
+        televidenteResponsable(nico).
+
+:-end_tests(televidenteResponsable).
+
+:- begin_tests(vieneZafando).
+
+test(maiu_no_vieneZafando_con_ninguna, nondet):-
+        vieneZafando(maiu,_).
+test(juanVieneZafando, set(Serie == [himym, got, hoc])):-
+        vieneZafando(juan, Serie).
+test(soloNicoVieneZafandoConStarWars, set(Persona == [nico])):-
+        vieneZafando(Persona, starWars).
+
+:-end_tests(vieneZafando).
+% ---------------------------------------------------------------------------------------------------------- Fin Parte 1:}
+
+% Parte 2 tp:
+
+%PlotTwist(Serie,Temporada,Capitulo,PlotTwist):
+plotTwist(got,3,2,["suenio","sinPiernas"]).
+plotTwist(got,3,12,["fuego","boda"]).
+plotTwist(superCampeones,9,9,["suenio","coma","sinPiernas"]).
+plotTwist(drHouse,8,7,["coma","pastillas"]).
+
+
+%malaGente/1:
+malaGente(Persona):-
+        estaEnSusPlanes(Persona,_),
+        forall(leDijo(Persona,OtraPersona,Serie,_),leSpoileo(Persona,OtraPersona,Serie)).
+
+malaGente(Persona):-
+        not(estaEnSusPlanes(Persona,Serie)),
+        leSpoileo(Persona,_,Serie).
+
+%esFuerte/2:
+esFuerte(Serie,LoQuePaso):-
+        paso(Serie,_,_,LoQuePaso), 
+        esHeavy(LoQuePaso).
+
+esFuerte(Serie,LoQuePaso):-
+        plotTwist(Serie,_,_,Plot),
+        esBuenPlotTwist(Plot,Serie).
+
+%esBuenPlotTwist/2:
+
+esBuenPlotTwist(Plot,Serie):-
+        not(esCliche(Plot,Serie)),
+        pasoEnFinalDeSeason(Plot,Serie).
+
+%EsCliche/2:
+esCliche(Plot,Serie):-
+        plotTwist(Serie,_,_,Plot),
+        forall(member())
+
+
+esFuerte(futurama,muerte(seymourDiera)).
+esFuerte(starWars,muerte(emperor)).
+esFuerte(starWars,relacion(parentesco,anakin,rey)).
+esFuerte(starWars,relacion(parentesco,darthVader,luke)).
+esFuerte(himym,relacion(amorosa,ted,robin)).
+esFuerte(himym,relacion(amorosa,swarley,robin)).
+
+
+esHeavy(muerte(_)).
+esHeavy(relacion(amorosa,_,_)).
+esHeavy(relacion(parentesco,_,_)).
