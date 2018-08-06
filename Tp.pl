@@ -40,6 +40,10 @@ paso(himym, 1, 1, relacion(amorosa, ted, robin)).
 paso(himym, 4, 3, relacion(amorosa, swarley, robin)).
 paso(got, 4, 5, relacion(amistad, tyrion, dragon)).
 paso(got,2,5,relacion(amistad,tyrion,dragon)).
+paso(got, 3, 2, plotTwist([suenio,sinPiernas])).
+paso(got,3,12,plotTwist([fuego,boda])).
+paso(superCampeones,9,9,plotTwist([suenio,coma,sinPiernas])).
+paso(drHouse,8,7,plotTwist([coma,pastillas])).
 
 %leDijo(Persona, OtraPersona, Serie, Lo que paso).
 leDijo(gaston, maiu, got, relacion(amistad, tyrion, dragon)).
@@ -123,43 +127,50 @@ test(relacion_de_parentesco_de_anakin_y_lavezzi_no_es_spoiler_en_starWars, fail)
 
 % ---------------------------------------------------------------------------------------------------------- Fin Parte 1:}
 
-% Parte 2 tp:
+%Parte 2 tp:
 
-%PlotTwist(Serie,Temporada,Capitulo,PlotTwist):
-plotTwist(got,3,2,["suenio","sinPiernas"]).
-plotTwist(got,3,12,["fuego","boda"]).
-plotTwist(superCampeones,9,9,["suenio","coma","sinPiernas"]).
-plotTwist(drHouse,8,7,["coma","pastillas"]).
-
+%Punto 1:
 
 %malaGente/1:
 malaGente(Persona):-
-        estaEnSusPlanes(Persona,_),
+        leDijo(Persona,_,_,_),
         forall(leDijo(Persona,OtraPersona,Serie,_),leSpoileo(Persona,OtraPersona,Serie)).
 
 malaGente(Persona):-
-        not(estaEnSusPlanes(Persona,Serie)),
-        leSpoileo(Persona,_,Serie).
+        leSpoileo(Persona,_,Serie),
+        not(mira(Persona,Serie)).
 
-%esFuerte/2:
-esFuerte(Serie,LoQuePaso):-
-        paso(Serie,_,_,LoQuePaso), 
+
+%Punto 2:
+
+%esFuerte/1:
+esFuerte(LoQuePaso):-
+        paso(_,_,_,LoQuePaso), 
         esHeavy(LoQuePaso).
 
-esFuerte(Serie,LoQuePaso):-
-        plotTwist(Serie,_,_,Plot),
-        esBuenPlotTwist(Plot,Serie).
 
-%esBuenPlotTwist/2:
+esFuerte(LoQuePaso):-
+        paso(_,_,_,LoQuePaso),
+        not(esCliche(LoQuePaso)),
+        pasoEnFinalDeSeason(LoQuePaso).
 
-esBuenPlotTwist(Plot,Serie):-
-        not(esCliche(Plot,Serie)),
-        pasoEnFinalDeSeason(Plot,Serie).
 
-%EsCliche/2:
-esCliche(Plot,Serie):-
-        plotTwist(Serie,_,_,Plot),
-        forall(member())
+%esCliche/1:
+esCliche(plotTwist(PalabrasClaves)):-
+        paso(_,_,_,plotTwist(PalabrasClaves),
+        forall(member(UnaClave,PalabrasClaves),apareceEnOtraSerie(UnaClave,PalabrasClaves)).
+
+
+%apareceEnOtraSerie/2:
+apareceEnOtraSerie(LoQuePaso,ListaClave):-
+        paso(_,_,_,plotTwist(Lista)),
+        plotTwist(Lista) /= plotTwist(ListaClave),
+        member(LoQuePaso,Lista).
+
+%pasoEnFinalDeSeason/1:
+pasoEnFinalDeSeason(LoQuePaso):-       
+        paso(Serie,Temporada,Capitulo,LoQuePaso),
+        serie(Serie,temporada(Temporada,Capitulo)).
 
 
 esFuerte(futurama,muerte(seymourDiera)).
