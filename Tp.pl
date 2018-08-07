@@ -16,9 +16,6 @@ quiereVer(aye, got).
 quiereVer(gaston, himym).
 quiereVer(aye,got).
 
-%esPopular(Serie).
-esPopular(hoc).
-
 %serie(Nombre, Temporadas).
 serie(got, temporada(3,12)).
 serie(got, temporada(2,10)).
@@ -69,24 +66,15 @@ esSpoiler(Serie, Spoiler):-
 leSpoileo(Persona, OtraPersona, Serie):-
         leDijo(Persona, OtraPersona, Serie, Spoiler),
         esSpoiler(Serie, Spoiler),
-        mira(OtraPersona, Serie).
-              
-leSpoileo(Persona, OtraPersona, Serie):-
-        leDijo(Persona, OtraPersona, Serie, Spoiler),
-        esSpoiler(Serie, Spoiler),
-        quiereVer(OtraPersona, Serie).
+        estaEnSusPlanes(OtraPersona,Serie).
 
 %Faltan consultas de lesSpoileo.
 
 %televidenteResponsable/1:
 televidenteResponsable(Persona):-
-        mira(Persona,_),
+        estaEnSusPlanes(Persona,_),
         not(leSpoileo(Persona,_,_)). 
-
-televidenteResponsable(Persona):-
-        quiereVer(Persona,_),
-        not(leSpoileo(Persona,_,_)).
-
+        
 
 %vieneZafando/2:
 vieneZafando(Persona,Serie):-
@@ -203,6 +191,9 @@ popularidadSerie(Serie,Total):-
         cuantosHablanDeUnaSerie(Serie,Habladores),
         Total is Espectadores * Habladores.
 
+
+%esPopular(Serie).
+esPopular(hoc).
 %esPopular/1:
 esPopular(Serie):-
         estaEnSusPlanes(_,Serie),
@@ -214,6 +205,7 @@ esPopular(Serie):-
 
 %Punto 4 :---------------------------
 
+%amigo(amigo1,amigo2).
 amigo(nico, maiu).
 amigo(maiu, gaston).
 amigo(maiu, juan).
