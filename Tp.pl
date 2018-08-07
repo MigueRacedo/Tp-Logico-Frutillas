@@ -107,7 +107,7 @@ esPopularOFuerte(Serie):-
 
 esPopularOFuerte(Serie):-
         serie(Serie,_),
-        forall(paso(Serie,Temporada,_,_),esFuerte(Serie,Temporada)).
+        forall(paso(Serie,Temporada,_,_),esFuerte(Serie)).
 
 
 :- begin_tests(esSpoiler).
@@ -137,6 +137,7 @@ malaGente(Persona):-
 malaGente(Persona):-
         leSpoileo(Persona,_,Serie),
         not(mira(Persona,Serie)).
+
 
 
 %Punto 2: --------------------------
@@ -170,17 +171,12 @@ pasoEnFinalDeSeason(LoQuePaso):-
         serie(Serie,temporada(Temporada,Capitulo)).
 
 
-esFuerte(futurama,muerte(seymourDiera)).
-esFuerte(starWars,muerte(emperor)).
-esFuerte(starWars,relacion(parentesco,anakin,rey)).
-esFuerte(starWars,relacion(parentesco,darthVader,luke)).
-esFuerte(himym,relacion(amorosa,ted,robin)).
-esFuerte(himym,relacion(amorosa,swarley,robin)).
-
 
 esHeavy(muerte(_)).
 esHeavy(relacion(amorosa,_,_)).
 esHeavy(relacion(parentesco,_,_)).
+
+
 
 %Punto 3: ---------------------------
 
@@ -208,4 +204,23 @@ esPopular(Serie):-
         popularidadSerie(Serie,Cantidad),
         popularidadSerie(starWars,PopuStar),
         Cantidad >= PopuStar.
+
+
+
+%Punto 4 :---------------------------
+
+amigo(nico, maiu).
+amigo(maiu, gaston).
+amigo(maiu, juan).
+amigo(juan, aye).
+
+%fullSpoil/2:
+fullSpoil(Spoiler,Spoileado):-
+        leSpoileo(Spoiler,Spoileado,_),
+        Spoiler \= Spoileado.
+
+%fullSpoil(Spoiler,Spoileado):-
+
+
+
 
