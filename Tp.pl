@@ -56,10 +56,12 @@ esSpoiler(Serie, Spoiler):-
         paso(Serie,_,_,Spoiler).
 
 % Se pueden hacer consultar existenciales como:
+
 % ?- esSpoiler(_,_). - Que va a dar TRUE por cada hecho en mi base de conocimiento que satisfaga el predicado esSpoiler/2;
 % ?- esSpoiler(Serie,_). - Va a mostrar en pantalla aquellas series de que satisfacen el predicado;
 % ?- esSpoiler(_,Spoiler). - Igual que la consulta anterior pero con los Spoiler;
 % ?- esSpoiler(Serie,Spoiler). - Esta junta las 2 consultas anteriores en una;
+
 % Al poder hacerse todas estas consultar, demuestra que el predicado esSpoiler/2 es inversible.
 
 %leSpoileo/3:
@@ -68,7 +70,18 @@ leSpoileo(Persona, OtraPersona, Serie):-
         esSpoiler(Serie, Spoiler),
         estaEnSusPlanes(OtraPersona,Serie).
 
-%Faltan consultas de lesSpoileo.
+% Se pueden hacer consultar existenciales como:
+
+% ?- leSpoileo(_,_,_). - Que va a dar TRUE por cada hecho en mi base de conocimiento que satisfaga el predicado leSpoileo/3;
+% ?- leSpoileo(Persona,_,_). - Va a mostrar en pantalla aquellas personas que le spoilearon algo a alguien;
+% ?- leSpoileo(_,OtraPersona,_). - Igual que la consulta anterior pero con aquellos que fueron spoileados por alguien;
+% ?- leSpoileo(_,_,Serie). - Esta consulta va a mostrar aquellas series que fueron spoileadas;
+% ?- leSpoileo(Persona,OtraPersona,_). - Va a mostrar al spoileador y al spoileado;
+% ?- leSpoileo(Persona,_,Serie). - Muestra a las personas que le spoilearon a esa serie a alguien;
+% ?- leSpoileo(_,OtraPersona,Serie). - muestra a las personas que le spoilearon esa serie;
+% ?- leSpoileo(Persona,OtraPersona,Serie). - combinando las tres primeras, muestra una persona que le spoileo a otra persona, X serie;
+
+% Al poder hacerse todas estas consultar, demuestra que el predicado esSpoiler/2 es inversible.
 
 %televidenteResponsable/1:
 televidenteResponsable(Persona):-
@@ -97,19 +110,72 @@ esPopularOFuerte(Serie):-
         serie(Serie,_),
         forall(paso(Serie,_,_,LoQuePaso),esFuerte(Serie,LoQuePaso)).
 
+%tests:
+%test punto 1:---------------------------
 
 :- begin_tests(esSpoiler).
 
 test(muerte_del_emperador_es_spoiler_en_starWars, nondet):-
         esSpoiler(starWars,muerte(emperor)).
+
 test(muerte_de_pedro_no_es_spoiler_en_starWars, fail):-
         esSpoiler(starWars,muerte(pedro)).
+
 test(relacion_de_parentesco_de_anakin_y_rey_es_spoiler_en_starWars, nondet):-
         esSpoiler(starWars,relacion(parentesco,anakin,rey)).
+
 test(relacion_de_parentesco_de_anakin_y_lavezzi_no_es_spoiler_en_starWars, fail):-
         esSpoiler(starWars,relacion(parentesco,anakin,lavezzi)).
 
 :-end_tests(esSpoiler).
+
+%test punto 2:---------------------------
+
+:- begin_tests(leSpoileo).
+
+test(gaston_le_spoileo_gameOfThrones_a_maiu, nondet):-
+        leSpoileo(gaston,maiu,got).
+
+test(nico_le_spoileo_starWars_a_maiu, nondet):-
+        leSpoileo(nico,maiu,starWars).
+                                
+:-end_tests(leSpoileo).
+
+%test punto 3:---------------------------
+
+:- begin_tests(televidenteResponsable).
+
+test(juan_es_televidenteResponsable, nondet):-
+        televidenteResponsable(juan).
+
+test(aye_es_televidenteResponsable, nondet):-
+        televidenteResponsable(aye).
+
+test(maiu_es_televidenteResponsable, nondet):-
+        televidenteResponsable(maiu).
+
+test(gaston_no_es_televidenteResponsable, fail):-
+        televidenteResponsable(gaston).
+
+test(nico_no_es_televidenteResponsable, fail):-
+        televidenteResponsable(nico).
+                                
+:-end_tests(televidenteResponsable).
+
+%test punto 4:---------------------------
+
+:- begin_tests(vieneZafando).
+
+test(maiu_no_vieneZafando_con_ninguna, fail):-
+        vieneZafando(maiu,_).
+
+test(juan_VieneZafando_con_himym_got_hoc, set(Serie == [himym, got, hoc])):-
+        vieneZafando(juan, Serie).
+
+test(solo_Nico_VieneZafando_Con_StarWars, set(Persona == [nico])):-
+        vieneZafando(Persona, starWars).
+                                
+:-end_tests(vieneZafando).
 
 % ---------------------------------------------------------------------------------------------------------- Fin Parte 1:}
 
@@ -126,8 +192,6 @@ malaGente(Persona):-
         leSpoileo(Persona,_,Serie),
         not(mira(Persona,Serie)).
 
-
-
 %Punto 2: --------------------------
 
 %esFuerte/2:
@@ -139,7 +203,6 @@ esFuerte(Serie,LoQuePaso):-
 fuerte(LoQuePaso):-
         paso(_,_,_,LoQuePaso), 
         esHeavy(LoQuePaso).
-
 
 fuerte(LoQuePaso):-
         paso(_,_,_,LoQuePaso),
@@ -164,11 +227,9 @@ pasoEnFinalDeSeason(LoQuePaso):-
         serie(Serie,temporada(Temporada,Capitulo)).
 
 
-
 esHeavy(muerte(_)).
 esHeavy(relacion(amorosa,_,_)).
 esHeavy(relacion(parentesco,_,_)).
-
 
 
 %Punto 3: ---------------------------
@@ -194,13 +255,13 @@ popularidadSerie(Serie,Total):-
 
 %esPopular(Serie).
 esPopular(hoc).
+
 %esPopular/1:
 esPopular(Serie):-
         estaEnSusPlanes(_,Serie),
         popularidadSerie(Serie,Cantidad),
         popularidadSerie(starWars,PopuStar),
         Cantidad >= PopuStar.
-
 
 
 %Punto 4 :---------------------------
@@ -219,5 +280,72 @@ fullSpoil(Spoiler,Spoileado):-
 %fullSpoil(Spoiler,Spoileado):-
 
 
+%tests:
+%tests punto 1:------------------------
 
+:- begin_tests(malaGente).
 
+test(gaston_y_nico_son_malaGente, set(Malos = [gaston,nico])):-
+        malaGente(Malos).
+                                        
+test(aye,_pedro,_maiu,_y_juan_no_son_malaGente, set(Buenos = [aye, maiu, pedro, juan])):-
+        estaEnSusPlanes(Buenos, _), not(malaGente(Buenos)).
+                                
+:-end_tests(malaGente).
+
+%tests punto 2:------------------------
+
+:- begin_tests(esFuerte).
+
+test(la_muerte_de_seymourDiera_en_futurama_es_algo_fuerte, nondet):-
+        esFuerte(futurama, muerte(seymourDiera)).
+                                                        
+test(la_muerte_del_emperador_en_starWars_es_algo_fuerte, nondet):-
+        esFuerte(starWars, muerte(emperor)).
+                                                        
+test(la_relacionDeParentesco_entre_anakin_y_rey_en_starWars_es_algo_fuerte, nondet):-
+        esFuerte(starWars, relacion(parentesco, anakin, rey)).
+                                                        
+test(la_relacionDeParentesco_entre_vader_y_luke_en_starWars_es_algo_fuerte, nondet):-
+        esFuerte(starWars, relacion(parentesco, vader, luke)).
+                                                        
+test(la_relacionAmorosa_entre_ted_y_robin_en_himym_es_algo_fuerte, nondet):-
+        esFuerte(himym, relacion(amorosa, ted, robin)).
+                                                                    
+test(la_relacionAmorosa_entre_swarley_y_robin_en_himym_es_algo_fuerte, nondet):-
+        esFuerte(himym, relacion(amorosa, swarley, robin)).
+                                                        
+test(el_plot_que_contiene_fuego_y_boda_en_gameOfThrones_es_algo_fuerte, nondet):-
+        esFuerte(got, plotTwist([fuego, boda])).
+                                                                        
+test(el_plot_que_contiene_suenio_en_gameOfThrones_no_es_algo_fuerte, fail):-
+        esFuerte(got, plotTwist([suenio])).
+                                                        
+test(el_plot_que_contiene_coma_pastillas_en_drHouse_no_es_algo_fuerte, fail):-
+        esFuerte(drHouse, plotTwist([coma, pastillas])).
+                                                                                   
+:-end_tests(esFuerte).
+
+%tests punto 3:------------------------
+
+:- begin_tests(popularidadSerie).
+
+test(son_populares_got_starWars_houseOfCards, set(Populares = [got, starWars, hoc])):-
+        popular(Populares).
+                                
+:-end_tests(popularidadSerie).
+
+%tests punto 4:------------------------
+
+:- begin_tests(fullSpoil).
+              
+test(nico_hizo_fullSpoil_a_aye_juan_maiu_y_gaston, set(Quienes = [gaston, aye, juan, maiu])):-
+        fullSpoil(nico, Quienes).
+                        
+test(gaston_hizo_fullSpoil_a_maiu_juan_y_aye, set(Quienes = [aye, juan, maiu])):-
+        fullSpoil(gaston, Quienes).
+                        
+test(maiu_no_hizo_Spoil_a_nadie, set(Quienes = [])):-
+        fullSpoil(maiu, Quienes).
+
+:- end_tests(fullSpoil).     
