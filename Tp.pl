@@ -129,7 +129,7 @@ test(relacion_de_parentesco_de_anakin_y_lavezzi_no_es_spoiler_en_starWars, fail)
 
 %Parte 2 tp:
 
-%Punto 1:
+%Punto 1: --------------------------
 
 %malaGente/1:
 malaGente(Persona):-
@@ -141,7 +141,7 @@ malaGente(Persona):-
         not(mira(Persona,Serie)).
 
 
-%Punto 2:
+%Punto 2: --------------------------
 
 %esFuerte/1:
 esFuerte(LoQuePaso):-
@@ -157,14 +157,13 @@ esFuerte(LoQuePaso):-
 
 %esCliche/1:
 esCliche(plotTwist(PalabrasClaves)):-
-        paso(_,_,_,plotTwist(PalabrasClaves),
         forall(member(UnaClave,PalabrasClaves),apareceEnOtraSerie(UnaClave,PalabrasClaves)).
 
 
 %apareceEnOtraSerie/2:
 apareceEnOtraSerie(LoQuePaso,ListaClave):-
         paso(_,_,_,plotTwist(Lista)),
-        plotTwist(Lista) /= plotTwist(ListaClave),
+        plotTwist(Lista) \= plotTwist(ListaClave),
         member(LoQuePaso,Lista).
 
 %pasoEnFinalDeSeason/1:
@@ -184,5 +183,7 @@ esFuerte(himym,relacion(amorosa,swarley,robin)).
 esHeavy(muerte(_)).
 esHeavy(relacion(amorosa,_,_)).
 esHeavy(relacion(parentesco,_,_)).
+
+%Punto 3: ---------------------------
 
 
