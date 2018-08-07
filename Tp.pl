@@ -16,10 +16,8 @@ quiereVer(aye, got).
 quiereVer(gaston, himym).
 quiereVer(aye,got).
 
-%popular(Serie).
-popular(got).
-popular(hoc).
-popular(starWars).
+%esPopular(Serie).
+esPopular(hoc).
 
 %serie(Nombre, Temporadas).
 serie(got, temporada(3,12)).
@@ -105,7 +103,7 @@ estaEnSusPlanes(Persona,Serie):-
 
 %esPopularOFuerte/1:
 esPopularOFuerte(Serie):-
-        popular(Serie).
+        esPopular(Serie).
 
 esPopularOFuerte(Serie):-
         serie(Serie,_),
@@ -186,4 +184,28 @@ esHeavy(relacion(parentesco,_,_)).
 
 %Punto 3: ---------------------------
 
+%cuantosMiranSerie/2:
+cuantosMiranSerie(Serie,Cantidad):-
+        mira(_,Serie),
+        findall(Persona,mira(Persona,Serie),TotalPersonas),
+        length(TotalPersonas,Cantidad).
+
+%cuantosHablanDeUnaSerie/2:
+cuantosHablanDeUnaSerie(Serie,Cuantos):-
+        leDijo(_,_,Serie,_),
+        findall(Persona,leDijo(Persona,_,Serie,_),Conversaciones),
+        length(Conversaciones,Cuantos).
+
+%popularidadSerie/2:
+popularidadSerie(Serie,Total):-
+        cuantosMiranSerie(Serie,Espectadores),
+        cuantosHablanDeUnaSerie(Serie,Habladores),
+        Total is Espectadores * Habladores.
+
+%esPopular/1:
+esPopular(Serie):-
+        estaEnSusPlanes(_,Serie),
+        popularidadSerie(Serie,Cantidad),
+        popularidadSerie(starWars,PopuStar),
+        Cantidad >= PopuStar.
 
