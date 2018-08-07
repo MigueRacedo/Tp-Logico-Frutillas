@@ -45,10 +45,10 @@ paso(got,2,5,relacion(amistad,tyrion,dragon)).
 leDijo(gaston, maiu, got, relacion(amistad, tyrion, dragon)).
 leDijo(nico, maiu, starWars, relacion(parentesco, vader, luke)).
 leDijo(nico, juan, got, muerte(tyrion)). 
+leDijo(nico,juan,futurama,muerte(seymourDiera)).
 leDijo(aye, juan, got, relacion(amistad, tyrion, john)).
 leDijo(aye, maiu, got, relacion(amistad, tyrion, john)).
 leDijo(aye, gaston, got, relacion(amistad, tyrion, dragon)).
-leDijo(nico,juan,futurama,muerte(seymourDiera)).
 leDijo(pedro,aye,got,relacion(amistad,tyrion,dragon)).
 leDijo(pedro,nico,got,relacion(parentesco,tyrion,dragon)).
 
@@ -106,6 +106,7 @@ esPopularOFuerte(Serie):-
 esPopularOFuerte(Serie):-
         esFuerte(Serie).
 
+%esFuerte/1:
 esFuerte(Serie):-
         serie(Serie,_),
         forall(paso(Serie,_,_,LoQuePaso),hechoFuerte(LoQuePaso)).
@@ -114,6 +115,7 @@ hechoFuerte(muerte(_)).
 hechoFuerte(relacion(amorosa,_,_)).
 hechoFuerte(relacion(parentesco,_,_)).
 
+%tests:
 :- begin_tests(esSpoiler).
 
 test(muerte_del_emperador_es_spoiler_en_starWars, nondet):-
@@ -161,55 +163,27 @@ test(soloNicoVieneZafandoConStarWars, set(Persona == [nico])):-
         vieneZafando(Persona, starWars).
 
 :-end_tests(vieneZafando).
+
 % ---------------------------------------------------------------------------------------------------------- Fin Parte 1:}
 
 % Parte 2 tp:
 
-%PlotTwist(Serie,Temporada,Capitulo,PlotTwist):
-plotTwist(got,3,2,["suenio","sinPiernas"]).
-plotTwist(got,3,12,["fuego","boda"]).
-plotTwist(superCampeones,9,9,["suenio","coma","sinPiernas"]).
-plotTwist(drHouse,8,7,["coma","pastillas"]).
-
-
 %malaGente/1:
 malaGente(Persona):-
-        estaEnSusPlanes(Persona,_),
+        leDijo(Persona,_,_,_),
         forall(leDijo(Persona,OtraPersona,Serie,_),leSpoileo(Persona,OtraPersona,Serie)).
 
 malaGente(Persona):-
-        not(estaEnSusPlanes(Persona,Serie)),
-        leSpoileo(Persona,_,Serie).
+        leSpoileo(Persona,_,Serie),
+        not(estaEnSusPlanes(Persona,Serie)).
 
-%esFuerte/2:
-esFuerte(Serie,LoQuePaso):-
-        paso(Serie,_,_,LoQuePaso), 
-        esHeavy(LoQuePaso).
+%tests:
+:- begin_tests(malaGente).
 
-esFuerte(Serie,LoQuePaso):-
-        plotTwist(Serie,_,_,Plot),
-        esBuenPlotTwist(Plot,Serie).
+test(malaGente, set(Malos = [gaston,nico])):-
+        malaGente(Malos).
+        
+test(buenaGente, set(Buenos = [aye, maiu, pedro, juan])):-
+        estaEnSusPlanes(Buenos, _), not(malaGente(Buenos)).
 
-%esBuenPlotTwist/2:
-
-esBuenPlotTwist(Plot,Serie):-
-        not(esCliche(Plot,Serie)),
-        pasoEnFinalDeSeason(Plot,Serie).
-
-%EsCliche/2:
-esCliche(Plot,Serie):-
-        plotTwist(Serie,_,_,Plot),
-        forall(member())
-
-
-esFuerte(futurama,muerte(seymourDiera)).
-esFuerte(starWars,muerte(emperor)).
-esFuerte(starWars,relacion(parentesco,anakin,rey)).
-esFuerte(starWars,relacion(parentesco,darthVader,luke)).
-esFuerte(himym,relacion(amorosa,ted,robin)).
-esFuerte(himym,relacion(amorosa,swarley,robin)).
-
-
-esHeavy(muerte(_)).
-esHeavy(relacion(amorosa,_,_)).
-esHeavy(relacion(parentesco,_,_)).
+:-end_tests(malaGente).
