@@ -331,7 +331,7 @@ test(el_plot_que_contiene_coma_pastillas_en_drHouse_no_es_algo_fuerte, fail):-
 :- begin_tests(popularidadSerie).
 
 test(son_populares_got_starWars_houseOfCards, set(Populares = [got, starWars, hoc])):-
-        popular(Populares).
+        esPopular(Populares).
                                 
 :-end_tests(popularidadSerie).
 
@@ -348,4 +348,4 @@ test(gaston_hizo_fullSpoil_a_maiu_juan_y_aye, set(Quienes = [aye, juan, maiu])):
 test(maiu_no_hizo_Spoil_a_nadie, set(Quienes = [])):-
         fullSpoil(maiu, Quienes).
 
-:- end_tests(fullSpoil).     
+:- end_tests(fullSpoil).                                 
