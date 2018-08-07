@@ -274,10 +274,19 @@ amigo(juan, aye).
 
 %fullSpoil/2:
 fullSpoil(Spoiler,Spoileado):-
-        leSpoileo(Spoiler,Spoileado,_),
-        Spoiler \= Spoileado.
+        leSpoileo(Spoiler,Spoileado,_).
 
 %fullSpoil(Spoiler,Spoileado):-
+        hayRelacion(AmigoSpoiler,Spoileado),
+        leSpoileo(Spoiler,AmigoSpoiler,_).
+
+%hayRelacion/2:
+hayRelacion(Persona,OtraPersona):-
+        amigo(Persona,OtraPersona).
+
+hayRelacion(Persona,OtraPersona):-
+        amigo(Persona,AmigoDelAmigo),
+        hayRelacion(AmigoDelAmigo,OtraPersona).
 
 
 %tests:
