@@ -107,7 +107,7 @@ esPopularOFuerte(Serie):-
 
 esPopularOFuerte(Serie):-
         serie(Serie,_),
-        forall(paso(Serie,Temporada,_,_),esFuerte(Serie)).
+        forall(paso(Serie,_,_,LoQuePaso),esFuerte(Serie,LoQuePaso)).
 
 
 :- begin_tests(esSpoiler).
@@ -142,13 +142,18 @@ malaGente(Persona):-
 
 %Punto 2: --------------------------
 
-%esFuerte/1:
-esFuerte(LoQuePaso):-
+%esFuerte/2:
+esFuerte(Serie,LoQuePaso):-
+        paso(Serie,_,_,LoQuePaso),
+        fuerte(LoQuePaso).
+
+%fuerte/1:
+fuerte(LoQuePaso):-
         paso(_,_,_,LoQuePaso), 
         esHeavy(LoQuePaso).
 
 
-esFuerte(LoQuePaso):-
+fuerte(LoQuePaso):-
         paso(_,_,_,LoQuePaso),
         not(esCliche(LoQuePaso)),
         pasoEnFinalDeSeason(LoQuePaso).
