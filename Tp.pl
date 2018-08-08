@@ -274,11 +274,13 @@ amigo(juan, aye).
 
 %fullSpoil/2:
 fullSpoil(Spoiler,Spoileado):-
-        leSpoileo(Spoiler,Spoileado,_).
+        leSpoileo(Spoiler,Spoileado,_),
+        Spoiler \= Spoileado.
 
 fullSpoil(Spoiler,Spoileado):-
         hayRelacion(AmigoSpoiler,Spoileado),
-        leSpoileo(Spoiler,AmigoSpoiler,_).
+        leSpoileo(Spoiler,AmigoSpoiler,_),
+        Spoiler \= Spoileado.
 
 %hayRelacion/2:
 hayRelacion(Persona,OtraPersona):-
@@ -297,7 +299,7 @@ hayRelacion(Persona,OtraPersona):-
 test(gaston_y_nico_son_malaGente, set(Malos = [gaston,nico])):-
         malaGente(Malos).
                                         
-test(aye,_pedro,_maiu,_y_juan_no_son_malaGente, set(Buenos = [aye, maiu, pedro, juan])):-
+test(aye_pedro_maiu_y_juan_no_son_malaGente, set(Buenos = [aye, maiu, pedro, juan])):-
         estaEnSusPlanes(Buenos, _), not(malaGente(Buenos)).
                                 
 :-end_tests(malaGente).
@@ -348,13 +350,13 @@ test(son_populares_got_starWars_houseOfCards, set(Populares = [got, starWars, ho
 
 :- begin_tests(fullSpoil).
               
-%test(nico_hizo_fullSpoil_a_aye_juan_maiu_y_gaston, set(Quienes = [gaston, aye, juan, maiu])):-
-        %fullSpoil(nico, Quienes).
+test(nico_hizo_fullSpoil_a_aye_juan_maiu_y_gaston, set(Quienes = [gaston, aye, juan, maiu])):-
+        fullSpoil(nico, Quienes).
                         
-%test(gaston_hizo_fullSpoil_a_maiu_juan_y_aye, set(Quienes = [aye, juan, maiu])):-
-        %fullSpoil(gaston, Quienes).
+test(gaston_hizo_fullSpoil_a_maiu_juan_y_aye, set(Quienes = [aye, juan, maiu])):-
+        fullSpoil(gaston, Quienes).
                         
 test(maiu_no_hizo_Spoil_a_nadie, set(Quienes = [])):-
         fullSpoil(maiu, Quienes).
 
-:- end_tests(fullSpoil).                           
+:- end_tests(fullSpoil). 
