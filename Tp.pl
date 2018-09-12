@@ -197,18 +197,14 @@ malaGente(Persona):-
 %esFuerte/2:
 esFuerte(Serie,LoQuePaso):-
         paso(Serie,_,_,LoQuePaso),
-        fuerte(LoQuePaso).
-
-%fuerte/1:
-fuerte(LoQuePaso):-
-        paso(_,_,_,LoQuePaso), 
         esHeavy(LoQuePaso).
 
-fuerte(LoQuePaso):-
+%fuerte/1:
+
+esHeavy(LoQuePaso):-
         paso(_,_,_,LoQuePaso),
         not(esCliche(LoQuePaso)),
         pasoEnFinalDeSeason(LoQuePaso).
-
 
 %esCliche/1:
 esCliche(plotTwist(PalabrasClaves)):-
