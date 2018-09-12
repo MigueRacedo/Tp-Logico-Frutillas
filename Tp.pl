@@ -218,7 +218,7 @@ esCliche(plotTwist(PalabrasClaves)):-
 %apareceEnOtraSerie/2:
 apareceEnOtraSerie(LoQuePaso,ListaClave):-
         paso(_,_,_,plotTwist(Lista)),
-        plotTwist(Lista) \= plotTwist(ListaClave),
+        Lista \= ListaClave,
         member(LoQuePaso,Lista).
 
 %pasoEnFinalDeSeason/1:
@@ -359,4 +359,4 @@ test(gaston_hizo_fullSpoil_a_maiu_juan_y_aye, set(Quienes = [aye, juan, maiu])):
 test(maiu_no_hizo_Spoil_a_nadie, set(Quienes = [])):-
         fullSpoil(maiu, Quienes).
 
-:- end_tests(fullSpoil). 
+:- end_tests(fullSpoil).
