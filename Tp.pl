@@ -258,7 +258,6 @@ esPopular(hoc).
 
 %esPopular/1:
 esPopular(Serie):-
-        estaEnSusPlanes(_,Serie),
         popularidadSerie(Serie,Cantidad),
         popularidadSerie(starWars,PopuStar),
         Cantidad >= PopuStar.
